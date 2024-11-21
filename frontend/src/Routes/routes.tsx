@@ -7,6 +7,8 @@ import {PokemonsRoutes} from "./PokemonRoutes/PokemonRoutes";
 import {ProtectedRoute} from "./ProtectedRoute";
 import {PublicRoute} from "./PublicRoute";
 
+const basename = "/pokedex-web";
+
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -26,4 +28,4 @@ export const router = createBrowserRouter([
         path: "*", // This catches all undefined routes
         element: <ErrorPage/>, // Render the ErrorPage component
     },
-]);
+],{ basename });
