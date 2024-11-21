@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from "react";
+import React, {FunctionComponent, useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 
 import "./Login.css";
@@ -15,6 +15,7 @@ export const Login: FunctionComponent = () => {
     const {login} = useAuth();
     const navigate = useNavigate();
     const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInputs>();
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
@@ -50,15 +51,21 @@ export const Login: FunctionComponent = () => {
 
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: {value: 6, message: "Password must be at least 6 characters"}
-                            })}
-                            className={errors.password ? "input-error" : ""}
-                        />
+                        <div className="password-wrapper">
+                            <input
+                                type={passwordVisible ? "text" : "password"}
+                                id="password"
+                                {...register("password", {
+                                    required: "Password is required",
+                                    minLength: {value: 6, message: "Password must be at least 6 characters"},
+                                })}
+                                className={errors.password ? "input-error" : ""}
+                            />
+                            <i
+                                className={`fas ${passwordVisible ? "fa-eye-slash" : "fa-eye"}`}
+                                onClick={() => setPasswordVisible((prev) => !prev)}
+                            />
+                        </div>
                         {errors.password && <p className="error-message">{errors.password.message}</p>}
                     </div>
                     <button type="submit" className="btn-submit">Login</button>
