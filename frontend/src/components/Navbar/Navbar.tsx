@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
+import { SearchBar } from "../SearchBar";
 import "./Navbar.css";
 
 export const Navbar: FunctionComponent = () => {
@@ -13,6 +14,10 @@ export const Navbar: FunctionComponent = () => {
         navigate("/");
     };
 
+    const handleSearchSelect = (pokemonId: string) => {
+        navigate(`/pokemons/${pokemonId}`);
+    };
+
     return (
         <nav className="navbar">
             <div className="navbar-left">
@@ -21,11 +26,7 @@ export const Navbar: FunctionComponent = () => {
                 </h1>
             </div>
             <div className="navbar-center">
-                <input
-                    type="text"
-                    placeholder="Search Pokémon..."
-                    className="navbar-search"
-                />
+                <SearchBar onSelectPokemon={handleSearchSelect} />
             </div>
             <div className="navbar-right">
                 <div className="navbar-user">
