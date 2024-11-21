@@ -4,13 +4,13 @@
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    background-color: #d1d8e0; /* Page background */
+    background-color: #d1d8e0;
     font-family: 'Arial', sans-serif;
-    color: #2c3e50; /* Neutral text color */
+    color: #2c3e50;
 }
 
 .details-header {
-    position: relative; /* For absolute positioning of the background image */
+    position: relative;
     text-align: center;
     padding: 40px 20px;
     color: white;
@@ -18,9 +18,9 @@
     margin-bottom: 20px;
     width: 100%;
     max-width: 800px;
-    /*background-color: #4b6584; !* Soft, elegant blue-gray *!*/
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly more visible shadow */
-    overflow: hidden; /* Ensures the background image doesn't overflow */
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 }
 
 .details-header::before {
@@ -33,26 +33,26 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    opacity: 0.2; /* Add smooth transparency */
-    z-index: 0; /* Push the background behind content */
+    opacity: 0.2;
+    z-index: 0;
 }
 
 .details-header h1,
 .details-header span {
-    position: relative; /* To stay above the background */
-    z-index: 1; /* Ensure text is on top of the background */
+    position: relative;
+    z-index: 1;
 }
 
 .details-header h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
-    color: #f7f9fc; /* Light, soft white text */
+    color: #f7f9fc;
 }
 
 .details-header span {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #dcdde1; /* Muted text color */
+    color: #dcdde1;
 }
 
 .pokemon-details-image {
@@ -62,30 +62,30 @@
 }
 
 .details-body {
-    background-color: #f5f6fa; /* Soft off-white background */
+    background-color: #f5f6fa;
     padding: 25px;
     border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a clean card effect */
-    color: #2c3e50; /* Neutral dark text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #2c3e50;
     width: 100%;
     max-width: 800px;
     margin-top: 20px;
 }
 
 .details-body h2 {
-    border-bottom: 2px solid #d1d8e0; /* Slightly darker than the page background */
+    border-bottom: 2px solid #d1d8e0;
     padding-bottom: 5px;
     margin-bottom: 15px;
     font-size: 1.6rem;
     color: #34495e;
-    text-transform: uppercase; /* Add a subtle uppercase style */
+    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .details-body p {
     margin: 10px 0;
     font-size: 1.1rem;
-    color: #636e72; /* Muted gray text for readability */
+    color: #636e72;
 }
 
 .details-body strong {
@@ -94,7 +94,7 @@
 }
 
 .back-button {
-    background-color: #487eb0; /* Soft medium blue */
+    background-color: #487eb0;
     color: white;
     border: none;
     border-radius: 8px;
@@ -106,10 +106,10 @@
 }
 
 .back-button:hover {
-    background-color: #40739e; /* Slightly darker blue on hover */
-    transform: scale(1.05); /* Slight scaling effect */
+    background-color: #40739e;
+    transform: scale(1.05);
 }
 
 .back-button:focus {
-    outline: 3px solid #d1d8e0; /* Subtle focus outline matching the background */
+    outline: 3px solid #d1d8e0;
 }

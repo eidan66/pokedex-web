@@ -86,8 +86,6 @@ export const PokemonList: FunctionComponent = () => {
                             src={pokemon.sprites.other["official-artwork"].front_default}
                             alt={pokemon.name}
                             className="pokemon-image"
-                            width={120}
-                            height={120}
                         />
                         <div className="pokemon-types">
                             {pokemon.types.map((type, index) => (
