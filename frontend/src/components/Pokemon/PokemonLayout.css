@@ -1,0 +1,5 @@
+main {
+    padding: 20px;
+    background-color: #d1d8e0;
+    min-height: calc(100vh - 60px);
+}
