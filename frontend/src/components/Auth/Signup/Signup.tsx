@@ -1,6 +1,6 @@
-import React, {FunctionComponent} from "react";
-import {useForm, SubmitHandler} from "react-hook-form";
-import {BackButton} from "../../BackButton";
+import React, { useState, FunctionComponent } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { BackButton } from "../../BackButton";
 
 import "./Signup.css";
 import {Link, useNavigate} from "react-router-dom";
@@ -14,26 +14,27 @@ type RegistrationFormInputs = {
 };
 
 export const Signup: FunctionComponent = () => {
-    const navigate = useNavigate();
     const {signup} = useAuth();
-    const {register, handleSubmit, watch, formState: {errors}} = useForm<RegistrationFormInputs>();
+    const navigate = useNavigate();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationFormInputs>();
 
     const password = watch("password");
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
     const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => {
         console.log("Registration data:", data);
+
         signup(data)
-        
         navigate("/pokemons");
     };
 
     return (
         <div className="registration-page">
-            <BackButton label='Homepage' navigateTo='/' className="custom-back-button"/>
+            <BackButton label="Homepage" navigateTo="/" className="custom-back-button" />
             <div className="registration-container">
                 <h1>Register</h1>
                 <form className="registration-form" onSubmit={handleSubmit(onSubmit)} noValidate method="POST">
-                    {/* Email Field */}
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
@@ -57,56 +58,59 @@ export const Signup: FunctionComponent = () => {
                         <input
                             type="text"
                             id="fullName"
-                            {...register("fullName", {required: "Full Name is required"})}
+                            {...register("fullName", { required: "Full Name is required" })}
                             className={errors.fullName ? "input-error" : ""}
                         />
                         {errors.fullName && <p className="error-message">{errors.fullName.message}</p>}
                     </div>
 
-                    {/* Password Field */}
                     <div className="form-group">
-                        <label htmlFor="password">
-                            Password
-                            <span className="tooltip-icon"
-                                  data-tooltip="Password must:&#10;- Be at least 6 characters long.&#10;- Include one uppercase letter.&#10;- Include one lowercase letter.&#10;- Include one number.">
-                <i className="fas fa-info-circle"></i>
-              </span>
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: {
-                                    value: 6,
-                                    message: "Password must be at least 6 characters",
-                                },
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                                    message: "Password must meet the specified rules",
-                                },
-
-                            })}
-                            className={errors.password ? "input-error" : ""}
-                            aria-invalid={errors.password ? "true" : "false"}
-                        />
+                        <label htmlFor="password">Password</label>
+                        <div className="password-wrapper">
+                            <input
+                                type={passwordVisible ? "text" : "password"}
+                                id="password"
+                                {...register("password", {
+                                    required: "Password is required",
+                                    minLength: {
+                                        value: 6,
+                                        message: "Password must be at least 6 characters",
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                                        message: "Password must meet the specified rules",
+                                    },
+                                })}
+                                className={errors.password ? "input-error" : ""}
+                                aria-invalid={errors.password ? "true" : "false"}
+                            />
+                            <i
+                                className={`fas ${passwordVisible ? "fa-eye-slash" : "fa-eye"}`}
+                                onClick={() => setPasswordVisible((prev) => !prev)}
+                            />
+                        </div>
                         {errors.password && <p className="error-message">{errors.password.message}</p>}
                     </div>
 
-                    {/* Confirm Password Field */}
                     <div className="form-group">
                         <label htmlFor="confirmPassword">Confirm Password</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            {...register("confirmPassword", {
-                                required: "Please confirm your password",
-                                validate: (value) =>
-                                    value === password || "Passwords do not match",
-                            })}
-                            className={errors.confirmPassword ? "input-error" : ""}
-                            aria-invalid={errors.confirmPassword ? "true" : "false"}
-                        />
+                        <div className="password-wrapper">
+                            <input
+                                type={confirmPasswordVisible ? "text" : "password"}
+                                id="confirmPassword"
+                                {...register("confirmPassword", {
+                                    required: "Please confirm your password",
+                                    validate: (value) =>
+                                        value === password || "Passwords do not match",
+                                })}
+                                className={errors.confirmPassword ? "input-error" : ""}
+                                aria-invalid={errors.confirmPassword ? "true" : "false"}
+                            />
+                            <i
+                                className={`fas ${confirmPasswordVisible ? "fa-eye-slash" : "fa-eye"}`}
+                                onClick={() => setConfirmPasswordVisible((prev) => !prev)}
+                            />
+                        </div>
                         {errors.confirmPassword && <p className="error-message">{errors.confirmPassword.message}</p>}
                     </div>
 

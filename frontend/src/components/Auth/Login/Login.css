@@ -121,3 +121,25 @@
 .redirect-link a:hover {
     text-decoration: underline;
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    flex: 1;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #888;
+    font-size: 1.2rem;
+}
+
+.password-wrapper i:hover {
+    color: #555;
+}
