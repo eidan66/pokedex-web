@@ -1,0 +1,115 @@
+.pokemon-details {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #d1d8e0; /* Page background */
+    font-family: 'Arial', sans-serif;
+    color: #2c3e50; /* Neutral text color */
+}
+
+.details-header {
+    position: relative; /* For absolute positioning of the background image */
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+    /*background-color: #4b6584; !* Soft, elegant blue-gray *!*/
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly more visible shadow */
+    overflow: hidden; /* Ensures the background image doesn't overflow */
+}
+
+.details-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.2; /* Add smooth transparency */
+    z-index: 0; /* Push the background behind content */
+}
+
+.details-header h1,
+.details-header span {
+    position: relative; /* To stay above the background */
+    z-index: 1; /* Ensure text is on top of the background */
+}
+
+.details-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #f7f9fc; /* Light, soft white text */
+}
+
+.details-header span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #dcdde1; /* Muted text color */
+}
+
+.pokemon-details-image {
+    width: 240px;
+    height: auto;
+    margin-top: 20px;
+}
+
+.details-body {
+    background-color: #f5f6fa; /* Soft off-white background */
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for a clean card effect */
+    color: #2c3e50; /* Neutral dark text */
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+.details-body h2 {
+    border-bottom: 2px solid #d1d8e0; /* Slightly darker than the page background */
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #34495e;
+    text-transform: uppercase; /* Add a subtle uppercase style */
+    letter-spacing: 0.5px;
+}
+
+.details-body p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #636e72; /* Muted gray text for readability */
+}
+
+.details-body strong {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.back-button {
+    background-color: #487eb0; /* Soft medium blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.back-button:hover {
+    background-color: #40739e; /* Slightly darker blue on hover */
+    transform: scale(1.05); /* Slight scaling effect */
+}
+
+.back-button:focus {
+    outline: 3px solid #d1d8e0; /* Subtle focus outline matching the background */
+}

@@ -1,4 +1,5 @@
 import React, {FunctionComponent, useEffect, useState, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 import "./PokemonList.css";
@@ -17,6 +18,12 @@ export const PokemonList: FunctionComponent = () => {
     const [error, setError] = useState<string | null>(null);
     const [offset, setOffset] = useState(0);
     const hasFetchedRef = useRef(false);
+
+    const navigate = useNavigate();
+
+    const handleCardClick = (id: number) => {
+        navigate(`/pokemons/${id}`);
+    };
 
     const fetchPokemons = async () => {
         try {
@@ -64,6 +71,7 @@ export const PokemonList: FunctionComponent = () => {
                     <div
                         key={`${pokemon.id}${pokemon.name}`}
                         className="pokemon-card"
+                        onClick={() => handleCardClick(pokemon.id)}
                         style={{
                             backgroundColor: `${PokemonColors[pokemon.types[0].type.name as keyof typeof PokemonColors]}80`,
                         }}
@@ -78,6 +86,8 @@ export const PokemonList: FunctionComponent = () => {
                             src={pokemon.sprites.other["official-artwork"].front_default}
                             alt={pokemon.name}
                             className="pokemon-image"
+                            width={120}
+                            height={120}
                         />
                         <div className="pokemon-types">
                             {pokemon.types.map((type, index) => (
