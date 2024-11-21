@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useEffect, useState, useRef } from "react";
+import React, {FunctionComponent, useEffect, useState, useRef} from "react";
 import axios from "axios";
 
 import "./PokemonList.css";
-import { PokemonColors } from "../../../constants/pokemonColor";
+import {PokemonColors} from "../../../constants/pokemonColor";
 
 interface Pokemon {
     id: number;
@@ -29,7 +29,6 @@ export const PokemonList: FunctionComponent = () => {
 
             const results = response.data.results;
 
-            // Fetch details for each Pokémon
             const promises = results.map((pokemon: { url: string }) =>
                 axios.get(pokemon.url)
             );
@@ -37,10 +36,8 @@ export const PokemonList: FunctionComponent = () => {
             const responses = await Promise.all(promises);
             const pokemonData = responses.map((res) => res.data);
 
-            // Append new Pokémon to the existing list
             setPokemons((prev) => [...prev, ...pokemonData]);
 
-            // Update offset for the next fetch
             setOffset((prev) => prev + 20);
         } catch (err) {
             setError("Failed to fetch Pokémon data. Please try again.");
@@ -50,12 +47,11 @@ export const PokemonList: FunctionComponent = () => {
     };
 
     useEffect(() => {
-        // Prevent duplicate calls on initial render
         if (!hasFetchedRef.current) {
             fetchPokemons();
-            hasFetchedRef.current = true; // Mark as fetched
+            hasFetchedRef.current = true;
         }
-    }, []); // Empty dependency array ensures this runs only on mount
+    }, []);
 
     if (error) {
         return <div className="error">{error}</div>;
@@ -102,7 +98,6 @@ export const PokemonList: FunctionComponent = () => {
                 ))}
             </div>
 
-            {/* Pagination: Load More Button */}
             <div className="pagination">
                 {loading ? (
                     <button disabled className="load-more">
