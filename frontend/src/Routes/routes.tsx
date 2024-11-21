@@ -4,14 +4,19 @@ import {ErrorPage} from "../components/ErrorPage";
 import {AuthRoutes} from "./AuthRoutes/AuthRoutes";
 import Homepage from "../components/Homepage/Homepage";
 import {PokemonsRoutes} from "./PokemonRoutes/PokemonRoutes";
-import ProtectedRoute from "./ProtectedRoute";
+import {ProtectedRoute} from "./ProtectedRoute";
+import {PublicRoute} from "./PublicRoute";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Homepage/>,
     },
-    ...AuthRoutes,
+    {
+        path: '/',
+        element: <PublicRoute/>,
+        children: AuthRoutes
+    },
     {
         path: "/pokemons",
         element: <ProtectedRoute/>,

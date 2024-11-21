@@ -1,6 +1,13 @@
-import {Pokemons} from "../../components/Pokemon/Pokemons/Pokemons";
+import {PokemonList, PokemonsLayout} from "../../components/Pokemon";
 
 export const PokemonsRoutes = [{
     path: "/pokemons",
-    element: <Pokemons/>,
+    element: <PokemonsLayout/>,
+    children: [
+        {
+            path: '',
+            element: <PokemonList/>
+        },
+
+    ]
 }]

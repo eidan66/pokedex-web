@@ -3,22 +3,28 @@ import {useForm, SubmitHandler} from "react-hook-form";
 import {BackButton} from "../../BackButton";
 
 import "./Signup.css";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "../../../context/AuthContext";
 
 type RegistrationFormInputs = {
     email: string;
     password: string;
     confirmPassword: string;
+    fullName: string;
 };
 
 export const Signup: FunctionComponent = () => {
+    const navigate = useNavigate();
+    const {signup} = useAuth();
     const {register, handleSubmit, watch, formState: {errors}} = useForm<RegistrationFormInputs>();
 
     const password = watch("password");
 
     const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => {
         console.log("Registration data:", data);
-        // Perform registration action (e.g., API call)
+        signup(data)
+        
+        navigate("/pokemons");
     };
 
     return (
@@ -44,6 +50,17 @@ export const Signup: FunctionComponent = () => {
                             aria-invalid={errors.email ? "true" : "false"}
                         />
                         {errors.email && <p className="error-message">{errors.email.message}</p>}
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="fullName">Full Name</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            {...register("fullName", {required: "Full Name is required"})}
+                            className={errors.fullName ? "input-error" : ""}
+                        />
+                        {errors.fullName && <p className="error-message">{errors.fullName.message}</p>}
                     </div>
 
                     {/* Password Field */}

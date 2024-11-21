@@ -3,7 +3,7 @@ import {useForm, SubmitHandler} from "react-hook-form";
 
 import "./Login.css";
 import {BackButton} from "../../BackButton";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "../../../context/AuthContext";
 
 type LoginFormInputs = {
@@ -13,13 +13,15 @@ type LoginFormInputs = {
 
 export const Login: FunctionComponent = () => {
     const {login} = useAuth();
+    const navigate = useNavigate();
     const {register, handleSubmit, formState: {errors}} = useForm<LoginFormInputs>();
 
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
         console.log("Login data:", data);
         login(data)
-        // Perform login action (e.g., API call)
+
+        navigate("/pokemons");
     };
 
     return (
