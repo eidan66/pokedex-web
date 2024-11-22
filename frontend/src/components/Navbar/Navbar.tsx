@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
@@ -8,6 +8,7 @@ import "./Navbar.css";
 export const Navbar: FunctionComponent = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -16,24 +17,34 @@ export const Navbar: FunctionComponent = () => {
 
     const handleSearchSelect = (pokemonId: string) => {
         navigate(`/pokemons/${pokemonId}`);
+        setIsMenuOpen(false);
+    };
+
+    const toggleMenu = () => {
+        setIsMenuOpen((prev) => !prev);
     };
 
     return (
         <nav className="navbar">
             <div className="navbar-left">
                 <h1 onClick={() => navigate("/pokemons")} className="navbar-title">
-                    Pokedex
+                    Pokédex
                 </h1>
             </div>
-            <div className="navbar-center">
-                <SearchBar onSelectPokemon={handleSearchSelect} />
-            </div>
-            <div className="navbar-right">
-                <div className="navbar-user">
-                    {user && <span>{user.fullName}</span>}
-                    <button onClick={handleLogout} className="navbar-logout">
-                        Logout
-                    </button>
+            <button className="navbar-toggle" onClick={toggleMenu}>
+                {isMenuOpen ? "✖" : "☰"}
+            </button>
+            <div className={`navbar-menu ${isMenuOpen ? "show" : ""}`}>
+                <div className="navbar-center">
+                    <SearchBar onSelectPokemon={handleSearchSelect} />
+                </div>
+                <div className="navbar-right">
+                    <div className="navbar-user">
+                        {user && <span>Hello, {user.fullName}!</span>}
+                        <button onClick={handleLogout} className="navbar-logout">
+                            Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>

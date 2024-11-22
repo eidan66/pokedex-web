@@ -4,6 +4,7 @@ import axios from "axios";
 
 import "./PokemonDetails.css";
 import {PokemonColors} from "../../../constants/pokemonColor";
+import {Loader} from "../../Loader";
 
 interface PokemonDetailsProps {
     id: number;
@@ -53,7 +54,7 @@ export const PokemonDetails: React.FC = () => {
     }, [id]);
 
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return <Loader/>
     }
 
     if (error) {
@@ -80,8 +81,8 @@ export const PokemonDetails: React.FC = () => {
             <div className="details-body">
                 <h2>About</h2>
                 <p><strong>Species:</strong> {pokemon.species}</p>
-                <p><strong>Height:</strong> {pokemon.height} m</p>
-                <p><strong>Weight:</strong> {pokemon.weight} kg</p>
+                <p><strong>Height:</strong> {pokemon.height}m</p>
+                <p><strong>Weight:</strong> {pokemon.weight}kg</p>
                 <p><strong>Abilities:</strong> {pokemon.abilities.map(a => a.ability.name).join(", ")}</p>
                 <h2>Breeding</h2>
                 <p><strong>Egg Groups:</strong> {pokemon.egg_groups.join(", ")}</p>
