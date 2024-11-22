@@ -4,6 +4,7 @@ import axios from "axios";
 
 import "./PokemonList.css";
 import {PokemonColors} from "../../../constants/pokemonColor";
+import {Loader} from "../../Loader";
 
 interface Pokemon {
     id: number;
@@ -108,9 +109,7 @@ export const PokemonList: FunctionComponent = () => {
 
             <div className="pagination">
                 {loading ? (
-                    <button disabled className="load-more">
-                        Loading...
-                    </button>
+                    <Loader/>
                 ) : (
                     <button onClick={fetchPokemons} className="load-more">
                         Load More
