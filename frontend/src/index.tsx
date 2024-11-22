@@ -7,15 +7,19 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {router} from "./Routes/routes";
 import {Providers} from "./Providers";
+import {ErrorBoundary} from "./components/ErrorBoundary/ErrorBoundary";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
 root.render(
     <React.StrictMode>
-        <Providers>
-            <RouterProvider router={router}/>
-        </Providers>
+        <ErrorBoundary>
+            <Providers>
+                <RouterProvider router={router}/>
+            </Providers>
+        </ErrorBoundary>
     </React.StrictMode>
 );
 

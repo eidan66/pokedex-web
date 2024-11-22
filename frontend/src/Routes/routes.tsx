@@ -13,19 +13,22 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <Homepage/>,
+        errorElement: <ErrorPage/>
     },
     {
-        path: '/',
+        path: "/",
         element: <PublicRoute/>,
-        children: AuthRoutes
+        children: AuthRoutes,
+        errorElement: <ErrorPage/>
     },
     {
         path: "/pokemons",
         element: <ProtectedRoute/>,
         children: PokemonsRoutes,
+        errorElement: <ErrorPage/>
     },
     {
-        path: "*", // This catches all undefined routes
-        element: <ErrorPage/>, // Render the ErrorPage component
+        path: "*",
+        element: <ErrorPage/>,
     },
-],{ basename });
+], {basename});
