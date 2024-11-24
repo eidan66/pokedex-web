@@ -5,44 +5,22 @@ import axios from "axios";
 import "./PokemonDetails.css";
 import {PokemonColors} from "../../../constants/pokemonColor";
 import {Loader} from "../../Loader";
+import {PokemonTypes} from "../PokemonTypes";
+import { PokemonDetails as IPokemonDetails} from "../../../types/pokemon";
 
-interface PokemonDetailsProps {
-    id: number;
-    name: string;
-    height: number;
-    weight: number;
-    abilities: { ability: { name: string } }[];
-    types: { type: { name: string } }[];
-    sprites: { other: { "official-artwork": { front_default: string } } };
-    species: string;
-    egg_groups: string[];
-    hatch_counter: number;
-}
 
 export const PokemonDetails: React.FC = () => {
     const {id} = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const [pokemon, setPokemon] = useState<PokemonDetailsProps | null>(null);
+    const [pokemon, setPokemon] = useState<IPokemonDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchPokemonDetails = async () => {
             try {
-                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-                const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-                setPokemon({
-                    id: response.data.id,
-                    name: response.data.name,
-                    height: response.data.height / 10, // Convert to meters
-                    weight: response.data.weight / 10, // Convert to kilograms
-                    abilities: response.data.abilities,
-                    types: response.data.types,
-                    sprites: response.data.sprites,
-                    species: speciesResponse.data.genera.find((g: any) => g.language.name === "en").genus,
-                    egg_groups: speciesResponse.data.egg_groups.map((group: any) => group.name),
-                    hatch_counter: speciesResponse.data.hatch_counter,
-                });
+                const response = await axios.get(`http://localhost:8000/pokemon/${id}`);
+                setPokemon(response.data);
             } catch (err) {
                 setError("Failed to load Pokémon details. Please try again.");
             } finally {
@@ -77,10 +55,11 @@ export const PokemonDetails: React.FC = () => {
                     alt={pokemon.name}
                     className="pokemon-details-image"
                 />
+                <PokemonTypes types={pokemon.types} />
             </div>
             <div className="details-body">
                 <h2>About</h2>
-                <p><strong>Species:</strong> {pokemon.species}</p>
+                <p><strong>Species:</strong> {pokemon.species.name}</p>
                 <p><strong>Height:</strong> {pokemon.height}m</p>
                 <p><strong>Weight:</strong> {pokemon.weight}kg</p>
                 <p><strong>Abilities:</strong> {pokemon.abilities.map(a => a.ability.name).join(", ")}</p>

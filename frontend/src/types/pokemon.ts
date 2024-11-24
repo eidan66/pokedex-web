@@ -114,7 +114,7 @@ export interface Stat {
     };
 }
 
-export interface Type {
+export interface PokemonType {
     slot: number;
     type: {
         name: string;
@@ -141,6 +141,11 @@ export interface Pokemon {
     species: Species;
     sprites: Sprites;
     stats: Stat[];
-    types: Type[];
+    types: PokemonType[];
     weight: number;
+}
+
+export interface PokemonDetails extends Pokemon {
+    egg_groups: string[];
+    hatch_counter: number;
 }
