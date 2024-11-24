@@ -3,12 +3,12 @@ import axios from 'axios';
 
 @Injectable()
 export class PokemonService {
-  private readonly baseUrl = 'https://pokeapi.co/api/v2/pokemon';
-  private readonly logger = new Logger(PokemonService.name);
+  private readonly baseUrl = 'https://pokeapi.co/api/v2';
+  private readonly pokemonUrl = `${this.baseUrl}/pokemon`;
 
   async findAll(limit: number, offset: number) {
     try {
-      const response = await axios.get(this.baseUrl, {
+      const response = await axios.get(this.pokemonUrl, {
         params: { limit, offset },
       });
 
@@ -33,8 +33,29 @@ export class PokemonService {
 
   async findOne(idOrName: string) {
     try {
-      const response = await axios.get(`${this.baseUrl}/${idOrName}`);
-      return response.data;
+      const response = await axios.get(`${this.pokemonUrl}/${idOrName}`);
+      const speciesResponse = await axios.get(
+        `${this.baseUrl}/pokemon-species/${idOrName}`,
+      );
+
+      return {
+        id: response.data.id,
+        name: response.data.name,
+        height: response.data.height / 10, // Convert to meters
+        weight: response.data.weight / 10, // Convert to kilograms
+        abilities: response.data.abilities,
+        types: response.data.types,
+        sprites: response.data.sprites,
+        species: speciesResponse.data.genera.find(
+          (g: any) => g.language.name === 'en',
+        ).genus,
+        egg_groups: speciesResponse.data.egg_groups.map(
+          (group: any) => group.name,
+        ),
+        hatch_counter: speciesResponse.data.hatch_counter,
+      };
+
+      // return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
         throw new HttpException('Pokémon not found', HttpStatus.NOT_FOUND);
@@ -52,7 +73,7 @@ export class PokemonService {
     }
 
     try {
-      const response = await axios.get(this.baseUrl, {
+      const response = await axios.get(this.pokemonUrl, {
         params: { limit: 1000 },
       });
 
