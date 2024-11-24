@@ -1,19 +1,16 @@
 import React, {useState, useCallback} from "react";
 import axios from "axios";
-import "./SearchBar.css";
 
-interface PokemonResult {
-    name: string;
-    url: string;
-}
+import "./SearchBar.css";
+import {Pokemon} from "../../types/pokemon";
 
 interface SearchBarProps {
-    onSelectPokemon: (pokemonId: string) => void;
+    onSelectPokemon: (pokemonId: number) => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({onSelectPokemon}) => {
     const [query, setQuery] = useState("");
-    const [suggestions, setSuggestions] = useState<PokemonResult[]>([]);
+    const [suggestions, setSuggestions] = useState<Pokemon[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
 
@@ -36,13 +33,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({onSelectPokemon}) => {
 
         try {
             const response = await axios.get(
-                `https://pokeapi.co/api/v2/pokemon?limit=1000`
-            );
-            const results = response.data.results.filter((pokemon: PokemonResult) =>
-                pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+                `http://localhost:8000/pokemon/search?query=${searchTerm}`
             );
 
-            setSuggestions(results.slice(0, 10));
+            setSuggestions(response.data);
         } catch (error) {
             console.error("Error fetching Pokémon suggestions:", error);
         } finally {
@@ -61,8 +55,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({onSelectPokemon}) => {
     };
 
 
-    const handleSuggestionClick = (pokemon: PokemonResult) => {
-        const pokemonId = pokemon.url.split("/").filter(Boolean).pop();
+    const handleSuggestionClick = (pokemon: Pokemon) => {
+        const pokemonId = pokemon.id;
         if (pokemonId) {
             setQuery("");
             setSuggestions([]);

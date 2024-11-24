@@ -15,7 +15,7 @@ export const Navbar: FunctionComponent = () => {
         navigate("/");
     };
 
-    const handleSearchSelect = (pokemonId: string) => {
+    const handleSearchSelect = (pokemonId: number) => {
         navigate(`/pokemons/${pokemonId}`);
         setIsMenuOpen(false);
     };
