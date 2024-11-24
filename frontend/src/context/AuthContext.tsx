@@ -43,7 +43,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         },
     });
 
-// Add interceptor to attach Authorization header
     axiosInstance.interceptors.request.use((config) => {
         const token = localStorage.getItem("authToken");
         if (token) {
@@ -58,16 +57,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
             const {accessToken, user: fetchedUser} = response.data;
 
-            // Save token and user in localStorage
             localStorage.setItem("authToken", accessToken);
             localStorage.setItem("user", JSON.stringify(fetchedUser));
 
-            // Update state
             setUser(fetchedUser);
             setIsLoggedIn(true);
         } catch (error) {
             console.error("Login failed:", error);
             alert("Invalid credentials. Please try again.");
+            throw new Error(`Login failed. Please try again. error => ${error}`);
         }
     };
 
@@ -77,11 +75,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
             const {accessToken, user: registeredUser} = response.data;
 
-            // Save token and user in localStorage
             localStorage.setItem("authToken", accessToken);
             localStorage.setItem("user", JSON.stringify(registeredUser));
 
-            // Update state
             setUser(registeredUser);
             setIsLoggedIn(true);
         } catch (error) {
@@ -92,11 +88,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     };
 
     const logout = () => {
-        // Remove token and user from localStorage
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
 
-        // Reset state
         setIsLoggedIn(false);
         setUser(null);
     };

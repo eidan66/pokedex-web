@@ -23,7 +23,6 @@ export const Signup: FunctionComponent = () => {
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
     const onSubmit: SubmitHandler<RegistrationFormInputs> = async (data) => {
-        console.log("Registration data:", data);
         try {
             await signup(data)
             navigate("/pokemons");

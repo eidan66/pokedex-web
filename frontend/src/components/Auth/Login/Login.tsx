@@ -19,10 +19,13 @@ export const Login: FunctionComponent = () => {
 
 
     const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-        console.log("Login data:", data);
-
-        await login(data)
-        navigate("/pokemons");
+        try {
+            await login(data)
+            navigate("/pokemons");
+        } catch (error) {
+            console.log(error)
+            return;
+        }
     };
 
     return (
