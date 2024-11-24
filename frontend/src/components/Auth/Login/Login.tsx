@@ -18,10 +18,10 @@ export const Login: FunctionComponent = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
 
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         console.log("Login data:", data);
-        login(data)
 
+        await login(data)
         navigate("/pokemons");
     };
 

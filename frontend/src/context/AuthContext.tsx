@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useState, ReactNode} from "react";
+import axios from "axios";
 
 interface LoginArguments {
     email: string;
@@ -14,8 +15,8 @@ interface SignupArguments {
 interface AuthContextType {
     isLoggedIn: boolean;
     user: { fullName: string } | null;
-    login: (data: LoginArguments) => void;
-    signup: (data: SignupArguments) => void;
+    login: (data: LoginArguments) => Promise<void>;
+    signup: (data: SignupArguments) => Promise<void>;
     logout: () => void;
 }
 
@@ -35,29 +36,67 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
         JSON.parse(localStorage.getItem("user") || "null")
     );
 
-    const login = ({email, password}: LoginArguments) => {
-        if (!email || !password) {
-            return;
+    const axiosInstance = axios.create({
+        baseURL: "http://localhost:8000",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+// Add interceptor to attach Authorization header
+    axiosInstance.interceptors.request.use((config) => {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
-        localStorage.setItem("authToken", "mockToken");
-        setUser({fullName: "John Doe"}); // Replace with actual user data from backend
-        localStorage.setItem("user", JSON.stringify({fullName: "John Doe"}));
-        setIsLoggedIn(true);
+        return config;
+    });
+
+    const login = async ({email, password}: LoginArguments) => {
+        try {
+            const response = await axiosInstance.post("/user/login", {email, password});
+
+            const {accessToken, user: fetchedUser} = response.data;
+
+            // Save token and user in localStorage
+            localStorage.setItem("authToken", accessToken);
+            localStorage.setItem("user", JSON.stringify(fetchedUser));
+
+            // Update state
+            setUser(fetchedUser);
+            setIsLoggedIn(true);
+        } catch (error) {
+            console.error("Login failed:", error);
+            alert("Invalid credentials. Please try again.");
+        }
     };
 
-    const signup = ({email, password, fullName}: SignupArguments) => {
-        if (!email || !password || !fullName) {
-            return;
+    const signup = async ({email, password, fullName}: SignupArguments) => {
+        try {
+            const response = await axiosInstance.post("/user/register", {email, password, fullName});
+
+            const {accessToken, user: registeredUser} = response.data;
+
+            // Save token and user in localStorage
+            localStorage.setItem("authToken", accessToken);
+            localStorage.setItem("user", JSON.stringify(registeredUser));
+
+            // Update state
+            setUser(registeredUser);
+            setIsLoggedIn(true);
+        } catch (error) {
+            console.error("Signup failed:", error);
+            alert("Registration failed. Please try again.");
+            throw new Error(`Registration failed. Please try again. error => ${error}`)
         }
-        localStorage.setItem("authToken", "mockToken");
-        setUser({fullName});
-        localStorage.setItem("user", JSON.stringify({fullName}));
-        setIsLoggedIn(true);
     };
 
     const logout = () => {
+        // Remove token and user from localStorage
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
+
+        // Reset state
         setIsLoggedIn(false);
         setUser(null);
     };

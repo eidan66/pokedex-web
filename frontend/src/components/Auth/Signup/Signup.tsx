@@ -1,6 +1,6 @@
-import React, { useState, FunctionComponent } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { BackButton } from "../../BackButton";
+import React, {useState, FunctionComponent} from "react";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {BackButton} from "../../BackButton";
 
 import "./Signup.css";
 import {Link, useNavigate} from "react-router-dom";
@@ -16,22 +16,26 @@ type RegistrationFormInputs = {
 export const Signup: FunctionComponent = () => {
     const {signup} = useAuth();
     const navigate = useNavigate();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationFormInputs>();
+    const {register, handleSubmit, watch, formState: {errors}} = useForm<RegistrationFormInputs>();
 
     const password = watch("password");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-    const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => {
+    const onSubmit: SubmitHandler<RegistrationFormInputs> = async (data) => {
         console.log("Registration data:", data);
-
-        signup(data)
-        navigate("/pokemons");
+        try {
+            await signup(data)
+            navigate("/pokemons");
+        } catch (error) {
+            console.log(error)
+            return;
+        }
     };
 
     return (
         <div className="registration-page">
-            <BackButton label="Homepage" navigateTo="/" className="custom-back-button" />
+            <BackButton label="Homepage" navigateTo="/" className="custom-back-button"/>
             <div className="registration-container">
                 <h1>Register</h1>
                 <form className="registration-form" onSubmit={handleSubmit(onSubmit)} noValidate method="POST">
@@ -58,7 +62,7 @@ export const Signup: FunctionComponent = () => {
                         <input
                             type="text"
                             id="fullName"
-                            {...register("fullName", { required: "Full Name is required" })}
+                            {...register("fullName", {required: "Full Name is required"})}
                             className={errors.fullName ? "input-error" : ""}
                         />
                         {errors.fullName && <p className="error-message">{errors.fullName.message}</p>}
