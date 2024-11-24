@@ -5,13 +5,9 @@ import axios from "axios";
 import "./PokemonList.css";
 import {PokemonColors} from "../../../constants/pokemonColor";
 import {Loader} from "../../Loader";
+import {PokemonTypes} from "../PokemonTypes";
+import {Pokemon} from "../../../types/pokemon";
 
-interface Pokemon {
-    id: number;
-    name: string;
-    types: { type: { name: string } }[];
-    sprites: { other: { "official-artwork": { front_default: string } } };
-}
 
 export const PokemonList: FunctionComponent = () => {
     const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -32,19 +28,11 @@ export const PokemonList: FunctionComponent = () => {
 
             setLoading(true);
             const response = await axios.get(
-                `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
+                `http://localhost:8000/pokemon?offset=${offset}&limit=20`
             );
 
-            const results = response.data.results;
 
-            const promises = results.map((pokemon: { url: string }) =>
-                axios.get(pokemon.url)
-            );
-
-            const responses = await Promise.all(promises);
-            const pokemonData = responses.map((res) => res.data);
-
-            setPokemons((prev) => [...prev, ...pokemonData]);
+            setPokemons((prev) => [...prev, ...response.data]);
 
             setOffset((prev) => prev + 20);
         } catch (err) {
@@ -88,21 +76,7 @@ export const PokemonList: FunctionComponent = () => {
                             alt={pokemon.name}
                             className="pokemon-image"
                         />
-                        <div className="pokemon-types">
-                            {pokemon.types.map((type, index) => (
-                                <span
-                                    key={index}
-                                    className="pokemon-type"
-                                    style={{
-                                        backgroundColor:
-                                            PokemonColors[type.type.name as keyof typeof PokemonColors],
-                                    }}
-                                >
-                  {type.type.name.charAt(0).toUpperCase() +
-                      type.type.name.slice(1)}
-                </span>
-                            ))}
-                        </div>
+                        <PokemonTypes types={pokemon.types}/>
                     </div>
                 ))}
             </div>
