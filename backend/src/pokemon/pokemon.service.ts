@@ -12,7 +12,6 @@ export class PokemonService {
         params: { limit, offset },
       });
 
-      // Fetch details for each Pokémon
       const detailedResults = await Promise.all(
         response.data.results.map(async (pokemon: any) => {
           const details = await axios.get(pokemon.url);
@@ -20,7 +19,6 @@ export class PokemonService {
         }),
       );
 
-      // Explicitly sort by ID
       detailedResults.sort((a, b) => a.id - b.id);
 
       return detailedResults;
@@ -33,7 +31,6 @@ export class PokemonService {
     }
   }
 
-  // Fetch a specific Pokémon by ID or name
   async findOne(idOrName: string) {
     try {
       const response = await axios.get(`${this.baseUrl}/${idOrName}`);
@@ -59,12 +56,10 @@ export class PokemonService {
         params: { limit: 1000 },
       });
 
-      // Filter Pokémon by name
       const filteredResults = response.data.results.filter((pokemon: any) =>
         pokemon.name.toLowerCase().includes(query.toLowerCase()),
       );
 
-      // Fetch detailed data for the filtered Pokémon
       const detailedResults = await Promise.all(
         filteredResults.map(async (pokemon: any) => {
           const details = await axios.get(pokemon.url);
