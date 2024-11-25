@@ -1,57 +1,87 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
 
+import { User as EUser } from './user.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  password: string;
-}
-
 @Injectable()
 export class UserService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectRepository(EUser)
+    private userRepository: Repository<EUser>,
+  ) {}
 
   async registerUser(dto: RegisterUserDto) {
-    const id = uuidv4();
+    try {
+      // Check for existing user
+      const existingUser = await this.userRepository.findOne({
+        where: { email: dto.email },
+      });
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+      if (existingUser) {
+        throw new ConflictException('A user with this email already exists');
+      }
 
-    const user: User = {
-      id,
-      fullName: dto.fullName,
-      email: dto.email,
-      password: hashedPassword,
-    };
+      // Hash password and create user
+      const hashedPassword = await bcrypt.hash(dto.password, 10);
+      const user = this.userRepository.create({
+        fullName: dto.fullName,
+        email: dto.email,
+        password: hashedPassword,
+      });
 
-    const payload = { fullName: user.fullName, sub: user.id };
-    const accessToken = this.jwtService.sign(payload);
+      const savedUser = await this.userRepository.save(user);
 
-    return {
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-      },
-      accessToken,
-    };
+      // Generate JWT token
+      const payload = { fullName: savedUser.fullName, sub: savedUser.id };
+      const accessToken = this.jwtService.sign(payload);
+
+      return {
+        user: {
+          id: savedUser.id,
+          fullName: savedUser.fullName,
+          email: savedUser.email,
+        },
+        accessToken,
+      };
+    } catch (error) {
+      const { message, statusCode } = error.response || {};
+      // Handle database-related errors
+      if ((error.code || statusCode) === '23505') {
+        // Postgres unique constraint violation
+        throw new ConflictException('A user with this email already exists');
+      }
+
+      // Re-throw other unhandled errors
+      throw new HttpException(
+        message || 'Internal Server Error',
+        statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async loginUser(dto: LoginUserDto) {
-    const user: User = {
-      id: uuidv4(),
-      fullName: 'testuser',
-      email: 'test@example.com',
-      password: await bcrypt.hash('Password123', 10),
-    };
+    const user = await this.userRepository.findOneBy({ email: dto.email });
 
-    if (!user || !(await bcrypt.compare(dto.password, user.password))) {
-      throw new Error('Invalid credentials');
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { fullName: user.fullName, sub: user.id };

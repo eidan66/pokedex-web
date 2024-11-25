@@ -64,8 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
             setIsLoggedIn(true);
         } catch (error) {
             console.error("Login failed:", error);
-            alert("Invalid credentials. Please try again.");
-            throw new Error(`Login failed. Please try again. error => ${error}`);
+            throw new Error("Invalid credentials. Please try again.");
         }
     };
 
@@ -80,10 +79,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
             setUser(registeredUser);
             setIsLoggedIn(true);
-        } catch (error) {
-            console.error("Signup failed:", error);
-            alert("Registration failed. Please try again.");
-            throw new Error(`Registration failed. Please try again. error => ${error}`)
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                const status = error.response?.status;
+                const message = error.response?.data?.message;
+
+                if (status === 409) {
+                    throw new Error("A user with this email already exists. Please try logging in..");
+                }
+
+                console.error("Signup failed:", message || error.message);
+                throw new Error(message || "Registration failed. Please try again.");
+            } else {
+                console.error("Unexpected error during signup:", error);
+                throw new Error("An unexpected error occurred. Please try again later.");
+            }
         }
     };
 
