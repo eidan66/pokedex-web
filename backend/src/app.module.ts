@@ -6,7 +6,6 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { RedisCacheModule } from './cache/redis-cache.module';
-import { TestCacheController } from './cache/test-cache.controller';
 
 @Module({
   imports: [
@@ -28,6 +27,5 @@ import { TestCacheController } from './cache/test-cache.controller';
     UserModule,
     PokemonModule,
   ],
-  controllers: [TestCacheController],
 })
 export class AppModule {}

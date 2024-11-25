@@ -5,12 +5,12 @@ import { ioRedisStore } from '@tirke/node-cache-manager-ioredis';
 @Module({
   imports: [
     CacheModule.registerAsync({
-      isGlobal: true, // Ensures it works globally across the app
+      isGlobal: true,
       useFactory: () => ({
-        store: ioRedisStore, // Specify the Redis store
-        host: process.env.REDIS_HOST || 'localhost', // Default to localhost if not set
-        port: parseInt(process.env.REDIS_PORT) || 6379, // Default Redis port
-        ttl: parseInt(process.env.REDIS_TTL) || 300, // Time-to-live (in seconds)
+        store: ioRedisStore,
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT) || 6379,
+        ttl: parseInt(process.env.REDIS_TTL) || 300,
       }),
     }),
   ],

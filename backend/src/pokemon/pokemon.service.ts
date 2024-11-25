@@ -80,7 +80,6 @@ export class PokemonService {
 
       return pokemonDetails;
 
-      // return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
         throw new HttpException('Pokémon not found', HttpStatus.NOT_FOUND);
