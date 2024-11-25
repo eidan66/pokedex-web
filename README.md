@@ -5,6 +5,56 @@ This repository contains the codebase for the Pokedex Web Application. The appli
 
 ---
 
+## **Previews**
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/1ff69347-44a2-479f-ac2b-9d92cd54b323" alt="homepage" width="300"/></td>
+    <td><img src="https://github.com/user-attachments/assets/67144e6e-b7ea-43e2-8f6e-581b8f7dfed6" alt="pokemon list" width="300"/></td>
+    <td><img src="https://github.com/user-attachments/assets/5b6f2ae8-cc3b-4383-8c33-874ef5a0e795" alt="pokemon details" width="300"/></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Homepage</b></td>
+    <td align="center"><b>Pokemon List</b></td>
+    <td align="center"><b>Pokemon Details</b></td>
+  </tr>
+</table>
+
+---
+
+## **Tech Stack**
+
+This project uses the following technologies:
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" width="50"/>
+      <br><b>React</b>
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" width="50"/>
+      <br><b>TypeScript</b>
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg" alt="Nest.js" width="50"/>
+      <br><b>Nest.Js</b>
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" width="50"/>
+      <br><b>PostgreSQL</b>
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" width="50"/>
+      <br><b>Redis</b>
+    </td>
+    <td align="center">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" width="50"/>
+      <br><b>Docker</b>
+    </td>
+  </tr>
+</table>
+
 ## **Setup Instructions**
 
 ### **1. Clone the Repository**
@@ -74,4 +124,3 @@ docker-compose down
 ## **Contributing**
 
 Feel free to open issues or submit pull requests to improve this project.
-
