@@ -1,9 +1,9 @@
-import React, { useState, FunctionComponent } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { BackButton } from "../../BackButton";
+import React, {useState, FunctionComponent} from "react";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {Link, useNavigate} from "react-router-dom";
 
 import "./Signup.css";
-import {Link, useNavigate} from "react-router-dom";
+import {BackButton} from "../../BackButton";
 import {useAuth} from "../../../context/AuthContext";
 
 type RegistrationFormInputs = {
@@ -16,25 +16,30 @@ type RegistrationFormInputs = {
 export const Signup: FunctionComponent = () => {
     const {signup} = useAuth();
     const navigate = useNavigate();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationFormInputs>();
+    const {register, handleSubmit, watch, formState: {errors}} = useForm<RegistrationFormInputs>();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const password = watch("password");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-    const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => {
-        console.log("Registration data:", data);
-
-        signup(data)
-        navigate("/pokemons");
+    const onSubmit: SubmitHandler<RegistrationFormInputs> = async (data) => {
+        try {
+            setErrorMessage("")
+            await signup(data)
+            navigate("/pokemons");
+        } catch (error) {
+            setErrorMessage((error as Error).message || "An error occurred. Please try again.");
+        }
     };
 
     return (
         <div className="registration-page">
-            <BackButton label="Homepage" navigateTo="/" className="custom-back-button" />
+            <BackButton label="Homepage" navigateTo="/" className="custom-back-button"/>
             <div className="registration-container">
                 <h1>Register</h1>
                 <form className="registration-form" onSubmit={handleSubmit(onSubmit)} noValidate method="POST">
+                    {errorMessage && <p className="error-message">{errorMessage}</p>}
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
@@ -58,7 +63,7 @@ export const Signup: FunctionComponent = () => {
                         <input
                             type="text"
                             id="fullName"
-                            {...register("fullName", { required: "Full Name is required" })}
+                            {...register("fullName", {required: "Full Name is required"})}
                             className={errors.fullName ? "input-error" : ""}
                         />
                         {errors.fullName && <p className="error-message">{errors.fullName.message}</p>}
