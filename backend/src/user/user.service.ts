@@ -24,7 +24,6 @@ export class UserService {
 
   async registerUser(dto: RegisterUserDto) {
     try {
-      // Check for existing user
       const existingUser = await this.userRepository.findOne({
         where: { email: dto.email },
       });
@@ -33,7 +32,6 @@ export class UserService {
         throw new ConflictException('A user with this email already exists');
       }
 
-      // Hash password and create user
       const hashedPassword = await bcrypt.hash(dto.password, 10);
       const user = this.userRepository.create({
         fullName: dto.fullName,
@@ -43,7 +41,6 @@ export class UserService {
 
       const savedUser = await this.userRepository.save(user);
 
-      // Generate JWT token
       const payload = { fullName: savedUser.fullName, sub: savedUser.id };
       const accessToken = this.jwtService.sign(payload);
 
@@ -57,13 +54,10 @@ export class UserService {
       };
     } catch (error) {
       const { message, statusCode } = error.response || {};
-      // Handle database-related errors
       if ((error.code || statusCode) === '23505') {
-        // Postgres unique constraint violation
         throw new ConflictException('A user with this email already exists');
       }
 
-      // Re-throw other unhandled errors
       throw new HttpException(
         message || 'Internal Server Error',
         statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
