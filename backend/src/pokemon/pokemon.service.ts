@@ -1,12 +1,25 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import axios from 'axios';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+
+import { Pokemon } from './entities/pokemon.entity';
 
 @Injectable()
 export class PokemonService {
   private readonly baseUrl = 'https://pokeapi.co/api/v2';
   private readonly pokemonUrl = `${this.baseUrl}/pokemon`;
 
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
+
   async findAll(limit: number, offset: number) {
+    const cacheKey = `pokemons:limit=${limit}:offset=${offset}`;
+    const cachedData = await this.cacheManager.get<Pokemon[]>(cacheKey);
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     try {
       const response = await axios.get(this.pokemonUrl, {
         params: { limit, offset },
@@ -21,6 +34,7 @@ export class PokemonService {
 
       detailedResults.sort((a, b) => a.id - b.id);
 
+      await this.cacheManager.set(cacheKey, detailedResults);
       return detailedResults;
     } catch (error) {
       console.error(error);
@@ -32,13 +46,20 @@ export class PokemonService {
   }
 
   async findOne(idOrName: string) {
+    const cacheKey = `pokemon:${idOrName}`;
+    const cachedData = await this.cacheManager.get<Pokemon>(cacheKey);
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     try {
       const response = await axios.get(`${this.pokemonUrl}/${idOrName}`);
       const speciesResponse = await axios.get(
         `${this.baseUrl}/pokemon-species/${idOrName}`,
       );
 
-      return {
+      const pokemonDetails = {
         id: response.data.id,
         name: response.data.name,
         height: response.data.height / 10, // Convert to meters
@@ -55,7 +76,10 @@ export class PokemonService {
         hatch_counter: speciesResponse.data.hatch_counter,
       };
 
-      // return response.data;
+      await this.cacheManager.set(cacheKey, pokemonDetails);
+
+      return pokemonDetails;
+
     } catch (error) {
       if (error.response?.status === 404) {
         throw new HttpException('Pokémon not found', HttpStatus.NOT_FOUND);
@@ -73,8 +97,15 @@ export class PokemonService {
     }
 
     try {
+      const cacheKey = `search:${query}`;
+      const cachedData = await this.cacheManager.get<Pokemon[]>(cacheKey);
+
+      if (cachedData) {
+        return cachedData;
+      }
+
       const response = await axios.get(this.pokemonUrl, {
-        params: { limit: 1000 },
+        params: { limit: 1500 },
       });
 
       const filteredResults = response.data.results.filter((pokemon: any) =>
@@ -87,6 +118,8 @@ export class PokemonService {
           return details.data;
         }),
       );
+
+      await this.cacheManager.set(cacheKey, detailedResults.slice(0, 10));
 
       return detailedResults.slice(0, 10);
     } catch (error) {
