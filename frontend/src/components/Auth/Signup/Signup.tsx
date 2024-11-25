@@ -1,9 +1,9 @@
 import React, {useState, FunctionComponent} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
-import {BackButton} from "../../BackButton";
+import {Link, useNavigate} from "react-router-dom";
 
 import "./Signup.css";
-import {Link, useNavigate} from "react-router-dom";
+import {BackButton} from "../../BackButton";
 import {useAuth} from "../../../context/AuthContext";
 
 type RegistrationFormInputs = {
@@ -17,6 +17,7 @@ export const Signup: FunctionComponent = () => {
     const {signup} = useAuth();
     const navigate = useNavigate();
     const {register, handleSubmit, watch, formState: {errors}} = useForm<RegistrationFormInputs>();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const password = watch("password");
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -24,11 +25,11 @@ export const Signup: FunctionComponent = () => {
 
     const onSubmit: SubmitHandler<RegistrationFormInputs> = async (data) => {
         try {
+            setErrorMessage("")
             await signup(data)
             navigate("/pokemons");
         } catch (error) {
-            console.log(error)
-            return;
+            setErrorMessage((error as Error).message || "An error occurred. Please try again.");
         }
     };
 
@@ -38,6 +39,7 @@ export const Signup: FunctionComponent = () => {
             <div className="registration-container">
                 <h1>Register</h1>
                 <form className="registration-form" onSubmit={handleSubmit(onSubmit)} noValidate method="POST">
+                    {errorMessage && <p className="error-message">{errorMessage}</p>}
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
