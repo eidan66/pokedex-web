@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://eidan66.github.io/pokedex-web",
+  "homepage": ".",
   "scripts": {
     "predeploy": "yarn build",
     "deploy": "gh-pages -d build",
